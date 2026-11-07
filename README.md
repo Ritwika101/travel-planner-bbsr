@@ -1,38 +1,58 @@
-# Bhubaneswar Travel Planner — Original C++ on GitHub Pages
+# Bhubaneswar Travel Planner
 
-A simple, browser-based route planner, powered by the **original C++ `TravelPlanner` class** compiled to WebAssembly. The original adjacency list, `std::priority_queue`, Singleton pattern, Dijkstra routing logic and 21 directed weighted edges are retained.
+An interactive travel planner for exploring attractions in Bhubaneswar, Odisha. Choose a starting location and destination to find the shortest route through a weighted graph of local landmarks.
 
-## Exactly what changed
+The application runs a **C++ routing engine compiled to WebAssembly** directly in the browser and can be hosted as a static site on GitHub Pages.
 
-- `cpp/client.cpp`: **one spelling correction**: `Cavese` → `Caves`.
-- `cpp/travelplanner.cpp` and `cpp/travelplanner.hpp`: **unchanged byte-for-byte** from the supplied original project.
-- `cpp/web_bridge.cpp`: **new separate adapter**. It calls the original `client.cpp` initializer and original class's `shortestPathWithMinimumStops()`, captures its existing console output, and exposes it to the browser. Does **not** reimplement shortest paths.
-- `site/index.html`: UI and graphical display. JavaScript parses C++ output; it does **not** calculate routes.
-- `.github/workflows/deploy.yml`: compiles original sources with Emscripten and deploys the static output to GitHub Pages.
+## Features
 
-## Deploy via GitHub (no local compiler needed)
+- Select a source and destination from 11 Bhubaneswar landmarks.
+- Find the shortest route using Dijkstra's algorithm, with fewer intermediate stops preferred when total distances are equal.
+- View the route, total distance, and number of intermediate stops.
+- Explore a schematic SVG graph of 21 directed, weighted connections, with the selected path highlighted.
+- Use the application on desktop or mobile without signing in or connecting to a backend.
 
-1. Create a **public** GitHub repository and upload **the contents of this folder**, including the hidden `.github` directory. Upload the files/folders, *not* the ZIP file itself. Use branch `main`.
-2. Go to **Settings → Pages → Build and deployment** and choose **GitHub Actions** as the source.
-3. Open **Actions** and watch **Compile original C++ and deploy GitHub Pages**. The workflow builds `travelplanner.js` and `travelplanner.wasm` on GitHub and deploys them with the HTML site.
-4. When deployment finishes, visit `https://YOUR-USERNAME.github.io/YOUR-REPO/`.
+## Technology
 
-**Do not select “Deploy from a branch”**: this version needs GitHub Actions to compile the C++ source before publishing. The compiled output is still a purely static GitHub Pages site (no server or billable backend).
+- **C++:** Graph representation using adjacency lists, a priority queue, and a Singleton `TravelPlanner` class.
+- **WebAssembly (Emscripten):** Runs the routing engine in the browser.
+- **HTML, CSS, JavaScript, and SVG:** User interface and graph visualization.
+- **GitHub Pages and GitHub Actions:** Static hosting and automated builds.
 
-## Run/build locally (optional)
+## Project structure
 
-Install [Emscripten](https://emscripten.org/docs/getting_started/downloads.html), then run:
+```text
+├── cpp/
+│   ├── client.cpp
+│   ├── travelplanner.cpp
+│   ├── travelplanner.hpp
+│   └── web_bridge.cpp
+├── site/
+│   ├── index.html
+│   └── favicon.svg
+├── .github/workflows/deploy.yml
+├── build.sh
+└── README.md
+```
+
+## Run locally
+
+Install [Emscripten](https://emscripten.org/docs/getting_started/downloads.html) and activate its environment. From the project directory, run:
 
 ```bash
 bash build.sh
 python3 -m http.server 8000 --directory site
 ```
 
-Open http://localhost:8000 in a browser. Opening `index.html` directly with `file://` won't load WebAssembly.
+Open **http://localhost:8000** in your browser. Run the app through a local web server rather than opening `index.html` directly.
 
-## Important notes
+## Deploy to GitHub Pages
 
-- Routes and distances are from the supplied **directed project graph**, *not* a live road navigation service.
-- `travelplanner.cpp` contains existing compiler narrowing warnings; these were left unchanged as requested.
-- The new web bridge only handles initialization and output capture, not route computation.
-- The source logic was tested locally with a native C++ compiler. Actual WebAssembly compilation is performed by GitHub Actions because Emscripten is unavailable in the current build environment.
+1. Push the project files to the `main` branch of a GitHub repository, including `.github/workflows/deploy.yml`.
+2. In **Settings → Pages**, select **GitHub Actions** as the build and deployment source.
+3. The workflow builds the WebAssembly module and publishes the static site.
+4. Open the GitHub Pages URL shown after deployment.
+
+## Route data
+
+Routes use the project's directed, weighted landmark network. The SVG graph is a **schematic visualization**, not a geographical road map; distances are project edge weights rather than live traffic or navigation data.
