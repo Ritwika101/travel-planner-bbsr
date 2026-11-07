@@ -46,13 +46,6 @@ python3 -m http.server 8000 --directory site
 
 Open **http://localhost:8000** in your browser. Run the app through a local web server rather than opening `index.html` directly.
 
-## Deploy to GitHub Pages
+## Author
 
-1. Push the project files to the `main` branch of a GitHub repository, including `.github/workflows/deploy.yml`.
-2. In **Settings → Pages**, select **GitHub Actions** as the build and deployment source.
-3. The workflow builds the WebAssembly module and publishes the static site.
-4. Open the GitHub Pages URL shown after deployment.
-
-## Route data
-
-Routes use the project's directed, weighted landmark network. The SVG graph is a **schematic visualization**, not a geographical road map; distances are project edge weights rather than live traffic or navigation data.
+**Ritwika Pal**
