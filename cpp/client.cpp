@@ -14,7 +14,7 @@ int main() {
     int n = 11;
     vector<string>places = {"Bhubaneswar Railway Station", "Lingaraj Temple", "Udayagiri and Khandagiri Caves", "Nandankanan Zoological Park", "Dhauli Shanti Stupa", "Kalinga Stadium", "Regional Science Centre", "Odisha State Museum", "Ekamra Kanan Botanical Gardens", "Pathani Samanta Planetarium", "Rajarani Temple"};
     vector<vector<string>>paths = {{"Bhubaneswar Railway Station", "Lingaraj Temple", "3.5"}, 
-        {"Bhubaneswar Railway Station", "Udayagiri and Khandagiri Cavese", "6"},
+        {"Bhubaneswar Railway Station", "Udayagiri and Khandagiri Caves", "6"},
         {"Lingaraj Temple", "Nandankanan Zoological Park", "15"},
         {"Lingaraj Temple", "Dhauli Shanti Stupa", "8"},
         {"Lingaraj Temple", "Rajarani Temple", "4.5"},

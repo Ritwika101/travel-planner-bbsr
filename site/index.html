@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#112f32"><meta name="description" content="Explore an original graph-based route planner for Bhubaneswar attractions.">
+<title>Bhubaneswar Travel Planner</title>
+<style>
+:root{font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;color:#1a3031;background:#f4f6f3}*{box-sizing:border-box}body{margin:0}header{background:#123537;color:white;padding:50px 20px 58px}header .wrap{max-width:1010px;margin:auto}header .eyebrow{font-size:12px;letter-spacing:2.5px;color:#a4dbcb;font-weight:700}h1{font-size:clamp(30px,5vw,49px);margin:13px 0 8px;letter-spacing:-1.5px}header p{color:#cee1da;max-width:630px;line-height:1.65;margin:0}.wrap{max-width:1010px;margin:auto}.main{margin:-25px auto 45px;padding:0 20px}.panel{background:#fff;border:1px solid #e1e8e3;border-radius:17px;box-shadow:0 10px 35px #16352b12;padding:27px;margin-bottom:17px}h2{font-size:19px;margin:0 0 18px;letter-spacing:-.4px}.controls{display:grid;grid-template-columns:1fr 1fr auto;gap:13px;align-items:end}label{display:block;font-size:12px;font-weight:700;color:#56706c;margin-bottom:7px}select,button{font:inherit;border-radius:9px;min-height:47px}button:disabled{opacity:.6;cursor:wait}select{width:100%;background:white;border:1px solid #cbd9d4;padding:10px;color:#203838}button{background:#176c59;border:0;color:white;font-weight:700;padding:10px 23px;cursor:pointer;white-space:nowrap}button:hover{background:#125947}button:focus-visible,select:focus-visible{outline:3px solid #8dd9c2;outline-offset:2px}.result{margin-top:22px;border-top:1px solid #e4ebe7;padding-top:21px}.stats{display:flex;gap:11px;flex-wrap:wrap}.stat{background:#ecf5f0;border-radius:10px;padding:14px 19px;min-width:135px}.stat b{display:block;font-size:24px}.stat small{color:#53746c}.path{margin-top:17px;display:flex;gap:9px;align-items:center;flex-wrap:wrap}.place{background:#e8f3ed;border:1px solid #cfe3d7;padding:9px 12px;border-radius:9px;font-size:13px;font-weight:600}.arrow{color:#35836a;font-size:22px}.muted{color:#627674;font-size:13px;line-height:1.6}.maphead{display:flex;justify-content:space-between;gap:10px;align-items:baseline}.graph{width:100%;background:#f8faf8;border-radius:12px;border:1px solid #e0ebe5;display:block}.edge{stroke:#c6d7ce;stroke-width:2;fill:none}.edge.active{stroke:#18836a;stroke-width:4}.node circle{fill:white;stroke:#8ca99c;stroke-width:2}.node.active circle{fill:#17755f;stroke:#17755f}.node text{font-size:10px;fill:#3b5650;text-anchor:middle;font-weight:600}.node.active text{fill:#125e4c}.node .number{font-size:11px;fill:#26735a}.node.active .number{fill:white}.footer{text-align:center;color:#82928b;font-size:12px;max-width:800px;margin:25px auto 0;line-height:1.6}a{color:#1b745e}@media(max-width:690px){header{padding-top:38px}.controls{grid-template-columns:1fr}button{width:100%}.panel{padding:18px}.graph{min-height:295px}.node text{font-size:11px}}
+</style>
+</head>
+<body>
+<header><div class="wrap"><div class="eyebrow">EXPLORE ODISHA</div><h1>Bhubaneswar Travel Planner</h1><p>Find the shortest route between popular city landmarks using graph algorithms. When distances tie, the route with fewer stops wins.</p></div></header>
+<main class="wrap main">
+<section class="panel"><h2>Plan your route</h2><div class="controls"><div><label for="from">STARTING POINT</label><select id="from"></select></div><div><label for="to">DESTINATION</label><select id="to"></select></div><button id="find">Find route →</button></div><div id="result" class="result" aria-live="polite" hidden></div></section>
+<section class="panel"><div class="maphead"><h2>Route network</h2><span class="muted">Interactive schematic</span></div><svg class="graph" id="graph" viewBox="0 0 950 490" role="img" aria-label="Schematic diagram of 11 landmarks and directed travel connections"><defs><marker id="arrow" markerWidth="7" markerHeight="7" refX="5.4" refY="3" orient="auto"><path d="M0 0 L6 3 L0 6" fill="none" stroke="#a3bdb1" stroke-width="1.2"/></marker></defs><g id="edges"></g><g id="nodes"></g></svg><p class="muted">This schematic shows the original project's <strong>directed graph</strong>, not real road geometry. Edge weights come from the C++ project and are not live navigation distances.</p></section>
+<p class="footer">Powered by C++ compiled to WebAssembly · Runs entirely in your browser · No sign-in or server required</p>
+</main>
+<script src="./travelplanner.js"></script>
+<script>
+const places=[
+'Bhubaneswar Railway Station','Lingaraj Temple','Udayagiri and Khandagiri Caves','Nandankanan Zoological Park','Dhauli Shanti Stupa','Kalinga Stadium','Regional Science Centre','Odisha State Museum','Ekamra Kanan Botanical Gardens','Pathani Samanta Planetarium','Rajarani Temple'];
+// Directed edges and distances exactly as declared in client.cpp; fixes the "Cavese" spelling mistake.
+const routes=[[0,1,3.5],[0,2,6],[1,3,15],[1,4,8],[1,10,4.5],[2,6,5],[3,5,12],[3,2,9],[4,7,8],[5,8,7],[6,1,4],[6,9,4],[6,7,4],[6,5,6],[7,10,4.5],[7,4,8],[7,5,7],[8,1,5],[9,6,4],[9,4,7],[10,0,6]];
+const coords=[[120,145],[360,200],[210,355],[550,75],[585,375],[755,185],[420,325],[670,280],[840,345],[480,445],[190,70]];
+const names=['Railway Station','Lingaraj Temple','Udayagiri Caves','Nandankanan Zoo','Dhauli Stupa','Kalinga Stadium','Science Centre','State Museum','Ekamra Kanan','Planetarium','Rajarani Temple'];
+const from=document.getElementById('from'),to=document.getElementById('to'),result=document.getElementById('result');
+for(const [i,p] of places.entries()){for(const el of [from,to]){const opt=document.createElement('option');opt.value=i;opt.textContent=p;el.append(opt)}}to.value='2';
+// Real original TravelPlanner C++ class, compiled with Emscripten.
+// JavaScript ONLY renders/parses the original C++ console results.
+let engine = null;
+const findButton = document.getElementById('find');
+findButton.disabled = true;
+findButton.textContent = 'Loading C++ engine…';
+function findPath(start, end) {
+  if (!engine) return null;
+  const output = engine.UTF8ToString(engine._tp_route_text(start, end));
+  const distanceMatch = output.match(/The total distance that has to be travelled is\s+([0-9.]+)\s+kms/i);
+  const stopsMatch = output.match(/The number of stops will be\s+(\d+)/i);
+  const pathMatch = output.match(/The path will be:\s*\r?\n([^\r\n]+)/i);
+  if (!distanceMatch || !stopsMatch || !pathMatch) {
+    console.info('Original C++ output:', output);
+    return null;
+  }
+  const pathNames = pathMatch[1].trim().replace(/\.$/, '').split(' -> ');
+  const path = pathNames.map(name => places.findIndex(p => p.toLowerCase() === name.trim().toLowerCase()));
+  if (path.some(index => index < 0)) {
+    console.error('Unexpected location returned by original C++:', pathNames);
+    return null;
+  }
+  return {path, distance: Number(distanceMatch[1]), stops: Number(stopsMatch[1])};
+}
+async function loadEngine() {
+  try {
+    if (typeof createTravelPlannerModule !== 'function') throw new Error('WebAssembly JavaScript loader unavailable');
+    engine = await createTravelPlannerModule({locateFile: name => './' + name});
+    engine._tp_init();
+    findButton.disabled = false;
+    findButton.textContent = 'Find route →';
+    showRoute();
+  } catch (error) {
+    console.error(error);
+    result.hidden = false;
+    result.textContent = 'The C++ engine could not load. Open the published GitHub Pages site, not the local HTML file.';
+    findButton.textContent = 'Engine unavailable';
+  }
+}
+function svgElement(name,attrs){const el=document.createElementNS('http://www.w3.org/2000/svg',name);for(const [k,v] of Object.entries(attrs))el.setAttribute(k,v);return el}
+function draw(path=[]){const eg=document.getElementById('edges'),ng=document.getElementById('nodes');eg.replaceChildren();ng.replaceChildren();const activeEdges=new Set();for(let i=1;i<path.length;i++)activeEdges.add(path[i-1]+':'+path[i]);for(const [u,v,d] of routes){const [x1,y1]=coords[u],[x2,y2]=coords[v];const active=activeEdges.has(u+':'+v);const line=svgElement('line',{x1,y1,x2,y2,class:'edge'+(active?' active':''),'marker-end':'url(#arrow)'});const title=svgElement('title',{});title.textContent=`${places[u]} → ${places[v]} (${d} km)`;line.append(title);eg.append(line)}for(let i=0;i<places.length;i++){const [x,y]=coords[i];const node=svgElement('g',{class:'node'+(path.includes(i)?' active':''),transform:`translate(${x} ${y})`});node.append(svgElement('circle',{r:18}));const no=svgElement('text',{class:'number',y:4});no.textContent=i+1;node.append(no);const label=svgElement('text',{y:34});label.textContent=names[i];node.append(label);const title=svgElement('title',{});title.textContent=places[i];node.append(title);ng.append(node)}}
+function showRoute(){const start=Number(from.value),end=Number(to.value),answer=findPath(start,end);result.hidden=false;result.replaceChildren();if(!answer){const p=document.createElement('p');p.textContent='No route is available between these locations in the project graph. Try another pair.';result.append(p);draw();return}const stats=document.createElement('div');stats.className='stats';for(const [number,label] of [[`${Number(answer.distance.toFixed(2))} km`,'Total distance'],[answer.stops,'Intermediate stops'],[answer.path.length,'Places on route']]){const card=document.createElement('div');card.className='stat';const b=document.createElement('b'),small=document.createElement('small');b.textContent=number;small.textContent=label;card.append(b,small);stats.append(card)}const heading=document.createElement('p');heading.textContent='Your shortest route';heading.style.fontWeight='700';heading.style.margin='19px 0 10px';const path=document.createElement('div');path.className='path';answer.path.forEach((p,i)=>{if(i){const arrow=document.createElement('span');arrow.className='arrow';arrow.textContent='→';path.append(arrow)}const place=document.createElement('span');place.className='place';place.textContent=places[p];path.append(place)});result.append(stats,heading,path);draw(answer.path)}
+document.getElementById('find').addEventListener('click',showRoute);draw();loadEngine();
+</script>
+</body>
+</html>

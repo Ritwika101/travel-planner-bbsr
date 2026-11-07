@@ -1,25 +1,38 @@
-# travel-planner-bbsr
+# Bhubaneswar Travel Planner — Original C++ on GitHub Pages
 
-This is a DSA project that implements a modified Dijkstra's algorithm in C++, and a Singleton design pattern to create a travel planner for Bhubaneswar. 
-<br>
-# Problem statement
-Navigating a city’s tourist attractions efficiently can enhance the travel experience for visitors. In a city with numerous famous spots, finding the shortest path and minimizing the number of stops between these locations can be challenging. This project aims to simplify this task by developing an algorithm that determines the optimal route between selected tourist spots.
+A simple, browser-based route planner, powered by the **original C++ `TravelPlanner` class** compiled to WebAssembly. The original adjacency list, `std::priority_queue`, Singleton pattern, Dijkstra routing logic and 21 directed weighted edges are retained.
 
-# Solution
-The project aims to provide users with the shortest path and minimum number of stops between famous spots in the city. By representing the city's locations and routes as a graph, the algorithm efficiently computes the optimal route. The project will focus on 11 key tourist attractions within the city.<br><br>
-Implemented within a limited timeframe, this project showcases the application of graph algorithms in solving real-world travel planning problems, while also serving as a learning opportunity for students to reinforce their knowledge of data structures and algorithms.<br>
+## Exactly what changed
 
-<br>
-To run the application, run the following commands
+- `cpp/client.cpp`: **one spelling correction**: `Cavese` → `Caves`.
+- `cpp/travelplanner.cpp` and `cpp/travelplanner.hpp`: **unchanged byte-for-byte** from the supplied original project.
+- `cpp/web_bridge.cpp`: **new separate adapter**. It calls the original `client.cpp` initializer and original class's `shortestPathWithMinimumStops()`, captures its existing console output, and exposes it to the browser. Does **not** reimplement shortest paths.
+- `site/index.html`: UI and graphical display. JavaScript parses C++ output; it does **not** calculate routes.
+- `.github/workflows/deploy.yml`: compiles original sources with Emscripten and deploys the static output to GitHub Pages.
 
-# Creating objects
-g++ -c travelplanner.cpp 
+## Deploy via GitHub (no local compiler needed)
 
-# Creating library
-ar ru travelplanner_library.a travelplanner.o  
+1. Create a **public** GitHub repository and upload **the contents of this folder**, including the hidden `.github` directory. Upload the files/folders, *not* the ZIP file itself. Use branch `main`.
+2. Go to **Settings → Pages → Build and deployment** and choose **GitHub Actions** as the source.
+3. Open **Actions** and watch **Compile original C++ and deploy GitHub Pages**. The workflow builds `travelplanner.js` and `travelplanner.wasm` on GitHub and deploys them with the HTML site.
+4. When deployment finishes, visit `https://YOUR-USERNAME.github.io/YOUR-REPO/`.
 
-# Client
-g++ -o client client.cpp travelplanner_library.a  
+**Do not select “Deploy from a branch”**: this version needs GitHub Actions to compile the C++ source before publishing. The compiled output is still a purely static GitHub Pages site (no server or billable backend).
 
-# Running client
-./client 
+## Run/build locally (optional)
+
+Install [Emscripten](https://emscripten.org/docs/getting_started/downloads.html), then run:
+
+```bash
+bash build.sh
+python3 -m http.server 8000 --directory site
+```
+
+Open http://localhost:8000 in a browser. Opening `index.html` directly with `file://` won't load WebAssembly.
+
+## Important notes
+
+- Routes and distances are from the supplied **directed project graph**, *not* a live road navigation service.
+- `travelplanner.cpp` contains existing compiler narrowing warnings; these were left unchanged as requested.
+- The new web bridge only handles initialization and output capture, not route computation.
+- The source logic was tested locally with a native C++ compiler. Actual WebAssembly compilation is performed by GitHub Actions because Emscripten is unavailable in the current build environment.
