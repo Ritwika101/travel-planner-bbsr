@@ -2,7 +2,9 @@
 
 An interactive travel planner for exploring attractions in Bhubaneswar, Odisha. Choose a starting location and destination to find the shortest route through a weighted graph of local landmarks.
 
-The application runs a **C++ routing engine compiled to WebAssembly** directly in the browser and can be hosted as a static site on GitHub Pages.
+## Website
+
+https://ritwika101.github.io/travel-planner-bbsr/
 
 ## Features
 
