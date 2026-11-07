@@ -2,6 +2,11 @@
 #define travelplanner_hpp
 
 #include<iostream>
+#include <iostream>
+#include <vector>
+#include <string>
+#include <unordered_map>
+#include <utility>
 using namespace std;
 
 class TravelPlanner {

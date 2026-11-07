@@ -1,7 +1,9 @@
 // Browser interface only. The graph, class, and Dijkstra algorithm
 // are implemented in client.cpp and travelplanner.cpp
 
-#include <bits/stdc++.h>
+#include <iostream>
+#include <sstream>
+#include <string>
 #include "travelplanner.hpp"
 
 extern int original_main();

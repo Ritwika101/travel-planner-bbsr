@@ -64,7 +64,11 @@ void TravelPlanner :: createEdgeVector() {
         string kilometers = r[2];
         double pathDistance = stod(kilometers);
         int sourceIndex = locationToIndex[source], destinationIndex = locationToIndex[destination];
-        vector<double>temp = {sourceIndex, destinationIndex, pathDistance};
+        vector<double>temp = {
+            static_cast<double>(sourceIndex),
+            static_cast<double>(destinationIndex),
+            pathDistance
+        };
         edges[index++] = temp;
     }
 }
