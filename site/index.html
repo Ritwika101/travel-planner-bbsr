@@ -19,14 +19,13 @@
 <script>
 const places=[
 'Bhubaneswar Railway Station','Lingaraj Temple','Udayagiri and Khandagiri Caves','Nandankanan Zoological Park','Dhauli Shanti Stupa','Kalinga Stadium','Regional Science Centre','Odisha State Museum','Ekamra Kanan Botanical Gardens','Pathani Samanta Planetarium','Rajarani Temple'];
-// Directed edges and distances exactly as declared in client.cpp; fixes the "Cavese" spelling mistake.
+
 const routes=[[0,1,3.5],[0,2,6],[1,3,15],[1,4,8],[1,10,4.5],[2,6,5],[3,5,12],[3,2,9],[4,7,8],[5,8,7],[6,1,4],[6,9,4],[6,7,4],[6,5,6],[7,10,4.5],[7,4,8],[7,5,7],[8,1,5],[9,6,4],[9,4,7],[10,0,6]];
 const coords=[[120,145],[360,200],[210,355],[550,75],[585,375],[755,185],[420,325],[670,280],[840,345],[480,445],[190,70]];
 const names=['Railway Station','Lingaraj Temple','Udayagiri Caves','Nandankanan Zoo','Dhauli Stupa','Kalinga Stadium','Science Centre','State Museum','Ekamra Kanan','Planetarium','Rajarani Temple'];
 const from=document.getElementById('from'),to=document.getElementById('to'),result=document.getElementById('result');
 for(const [i,p] of places.entries()){for(const el of [from,to]){const opt=document.createElement('option');opt.value=i;opt.textContent=p;el.append(opt)}}to.value='2';
-// Real original TravelPlanner C++ class, compiled with Emscripten.
-// JavaScript ONLY renders/parses the original C++ console results.
+
 let engine = null;
 const findButton = document.getElementById('find');
 findButton.disabled = true;

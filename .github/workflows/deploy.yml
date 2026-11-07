@@ -1,32 +1,46 @@
-name: Compile original C++ and deploy GitHub Pages
+name: Build C++ WebAssembly and deploy GitHub Pages
+
 on:
   push:
     branches: [main]
   workflow_dispatch:
+
 permissions:
   contents: read
   pages: write
   id-token: write
+
 concurrency:
   group: pages
   cancel-in-progress: true
+
 jobs:
-  deploy:
+  build-and-deploy:
+    runs-on: ubuntu-latest
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: mymindstorm/setup-emsdk@v14
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Set up Emscripten (without cache)
+        uses: emscripten-core/setup-emsdk@v15
         with:
           version: '3.1.74'
-          actions-cache-folder: 'emsdk-cache'
-      - name: Build WebAssembly from original C++
-        run: bash build.sh
-      - uses: actions/configure-pages@v5
-      - uses: actions/upload-pages-artifact@v3
+          no-cache: true
+      - name: Compile C++ to WebAssembly
+        run: |
+          em++ --version
+          bash build.sh
+          test -s site/index.html
+          test -s site/travelplanner.js
+          test -s site/travelplanner.wasm
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+      - name: Upload compiled website
+        uses: actions/upload-pages-artifact@v3
         with:
           path: site
-      - id: deployment
+      - name: Deploy to GitHub Pages
+        id: deployment
         uses: actions/deploy-pages@v4
